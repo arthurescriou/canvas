@@ -1,6 +1,6 @@
 import * as conf from './conf'
 import { useRef, useEffect } from 'react'
-import { State, step, click, mouseMove, endOfGame } from './state'
+import { State, step, click, mouseMove, endOfGame, clickEnd } from './state'
 import { render, RenderProps } from './renderer'
 
 const randomInt = (max: number) => Math.floor(Math.random() * max)
@@ -16,7 +16,7 @@ const initCanvas =
 
 const Canvas = ({ height, width }: { height: number; width: number }) => {
   const initialState: State = {
-    pos: new Array(2).fill(1).map((_) => ({
+    pos: new Array(1).fill(1).map((_) => ({
       life: conf.BALLLIFE,
       coord: {
         x: randomInt(width - 120) + 60,
@@ -25,6 +25,15 @@ const Canvas = ({ height, width }: { height: number; width: number }) => {
         dy: 4 * randomSign(),
       },
     })),
+    player: {
+      life: conf.PLAYERLIFE,
+      coord: {
+        x: randomInt(width - 120) + 60,
+        y: randomInt(height - 120) + 60,
+        dx: 0,
+        dy: 0,
+      },
+    },
     size: { height, width },
     endOfGame: true,
   }
@@ -46,8 +55,13 @@ const Canvas = ({ height, width }: { height: number; width: number }) => {
     })(state.current)
     if (!state.current.endOfGame) requestAnimationFrame(() => iterate(ctx))
   }
+
   const onClick = (e: PointerEvent) => {
     state.current = click(state.current)(e)
+  }
+
+  const onClickEnd = (e: PointerEvent) => {
+    state.current = clickEnd(state.current)(e)
   }
 
   const onMove = (e: PointerEvent) => {
@@ -89,7 +103,8 @@ const Canvas = ({ height, width }: { height: number; width: number }) => {
       }
     }
 
-    ref.current.addEventListener('click', onClick)
+    ref.current.addEventListener('mousedown', onClick)
+    ref.current.addEventListener('mouseup', onClickEnd)
     ref.current.addEventListener('mousemove', onMove)
     ref.current.addEventListener('wheel', onWheel)
     ref.current.addEventListener('mouseupoutside', onDragEnd)
@@ -105,7 +120,8 @@ const Canvas = ({ height, width }: { height: number; width: number }) => {
     initCanvas(iterate)(ref.current)
 
     return () => {
-      ref.current.removeEventListener('click', onMove)
+      ref.current.removeEventListener('mousedown', onClick)
+      ref.current.removeEventListener('mouseup', onClickEnd)
       ref.current.removeEventListener('mousemove', onMove)
       ref.current.removeEventListener('wheel', onWheel)
       ref.current.removeEventListener('mouseupoutside', onDragEnd)

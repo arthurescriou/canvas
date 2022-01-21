@@ -101,8 +101,7 @@ export const step = (state: State) => {
       }
     })
   })
-<<<<<<< HEAD
-=======
+
   if (state.player.invincible) state.player.invincible--
   state.pos.map((p1, i) => {
     if (collide(p1.coord, state.player.coord)) {
@@ -117,7 +116,6 @@ export const step = (state: State) => {
       }
     }
   })
->>>>>>> 962f961b (add golf)
   return {
     ...state,
     player: iterate(state.size)(state.player),
@@ -130,4 +128,10 @@ export const mouseMove =
   (event: PointerEvent): State => {
     return state
   }
+<<<<<<< HEAD
 export const endOfGame = (state: State): boolean => state.pos.length > 0
+=======
+
+export const endOfGame = (state: State): boolean =>
+  state.player.life > 0 && state.pos.length > 0
+>>>>>>> cb1c78b6 (change en of game)

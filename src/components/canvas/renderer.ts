@@ -66,12 +66,13 @@ const drawCirle = (
 
 const diplayGameText = (ctx: CanvasRenderingContext2D) => (state: State) => {
   ctx.font = '96px arial'
+  ctx.strokeText(`life ${state.player.life}`, 20, 100)
   ctx.strokeText(
     `balls life ${state.pos
       .map((p) => p.life)
       .reduce((acc, val) => acc + val, 0)}`,
     20,
-    100
+    200
   )
 }
 
@@ -88,6 +89,12 @@ export const render =
         c.coord,
         computeColor(c.life, conf.BALLLIFE, COLORS.GREEN)
       )
+    )
+    drawCirle(
+      ctx,
+      props,
+      state.player.coord,
+      computeColor(state.player.life, conf.PLAYERLIFE, COLORS.BLUE)
     )
     diplayGameText(ctx)(state)
     if (state.endOfGame) {

@@ -16,7 +16,7 @@ const initCanvas =
 
 const Canvas = ({ height, width }: { height: number; width: number }) => {
   const initialState: State = {
-    pos: new Array(1).fill(1).map((_) => ({
+    pos: new Array(20).fill(1).map((_) => ({
       life: conf.BALLLIFE,
       coord: {
         x: randomInt(width - 120) + 60,

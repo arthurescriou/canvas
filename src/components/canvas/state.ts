@@ -102,5 +102,4 @@ export const mouseMove =
   (event: PointerEvent): State => {
     return state
   }
-
-export const endOfGame = (state: State): boolean => true
+export const endOfGame = (state: State): boolean => state.pos.length > 0

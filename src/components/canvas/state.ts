@@ -128,4 +128,5 @@ export const mouseMove =
     return state
   }
 
-export const endOfGame = (state: State): boolean => state.pos.length > 0
+export const endOfGame = (state: State): boolean =>
+  state.player.life > 0 && state.pos.length > 0

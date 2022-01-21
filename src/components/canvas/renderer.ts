@@ -2,7 +2,7 @@ import * as conf from './conf'
 import { State } from './state'
 const COLORS = {
   RED: '#ff0000',
-  GREEN: '#00ff00',
+  GREEN: '#008800',
   BLUE: '#0000ff',
 }
 
@@ -41,49 +41,58 @@ const clear = (ctx: CanvasRenderingContext2D) => {
   ctx.fillRect(0, 0, width, height)
 }
 
+export type RenderProps = {
+  pos: { x: number; y: number }
+  scale: number
+}
+
 const drawCirle = (
   ctx: CanvasRenderingContext2D,
+  renderProps: RenderProps,
   { x, y }: { x: number; y: number },
   color: string
 ) => {
   ctx.beginPath()
   ctx.fillStyle = color
-  ctx.arc(x, y, conf.RADIUS, 0, 2 * Math.PI)
+  ctx.arc(
+    (x + renderProps.pos.x) * renderProps.scale,
+    (y + renderProps.pos.y) * renderProps.scale,
+    conf.RADIUS * renderProps.scale,
+    0,
+    2 * Math.PI
+  )
   ctx.fill()
 }
 
 const diplayGameText = (ctx: CanvasRenderingContext2D) => (state: State) => {
   ctx.font = '96px arial'
-  ctx.strokeText(`life ${state.player.life}`, 20, 100)
   ctx.strokeText(
     `balls life ${state.pos
       .map((p) => p.life)
       .reduce((acc, val) => acc + val, 0)}`,
     20,
-    200
+    100
   )
 }
 
 const computeColor = (life: number, maxLife: number, baseColor: string) =>
   rgbaTorgb(baseColor, (maxLife - life) * (1 / maxLife))
 
-export const render = (ctx: CanvasRenderingContext2D) => (state: State) => {
-  clear(ctx)
-
-  state.pos.map((c) =>
-    drawCirle(ctx, c.coord, computeColor(c.life, conf.BALLLIFE, COLORS.RED))
-  )
-  drawCirle(
-    ctx,
-    state.player.coord,
-    computeColor(state.player.life, conf.PLAYERLIFE, COLORS.BLUE)
-  )
-
-  diplayGameText(ctx)(state)
-
-  if (state.endOfGame) {
-    const text = state.pos.length > 0 ? 'YOU LOSE' : 'YOU WIN'
-    ctx.font = '48px'
-    ctx.strokeText(text, state.size.width / 2 - 200, state.size.height / 2)
+export const render =
+  (ctx: CanvasRenderingContext2D, props: RenderProps) => (state: State) => {
+    clear(ctx)
+    state.pos.map((c) =>
+      drawCirle(
+        ctx,
+        props,
+        c.coord,
+        computeColor(c.life, conf.BALLLIFE, COLORS.GREEN)
+      )
+    )
+    diplayGameText(ctx)(state)
+    if (state.endOfGame) {
+      const text = 'END'
+      ctx.font = '48px'
+      ctx.strokeText(text, state.size.width / 2 - 100, state.size.height / 2)
+    }
   }
-}

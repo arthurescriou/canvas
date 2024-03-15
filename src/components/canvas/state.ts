@@ -91,10 +91,7 @@ export const step = (state: State) => {
       }
     })
   })
-<<<<<<< HEAD
-=======
 
->>>>>>> 2a95b20c (:memo: add zoom and drag and drop)
   return {
     ...state,
     pos: state.pos.map(iterate(state.size)).filter((p) => p.life > 0),
@@ -107,8 +104,4 @@ export const mouseMove =
     return state
   }
 
-<<<<<<< HEAD
-export const endOfGame = (state: State): boolean => true
-=======
 export const endOfGame = (state: State): boolean => state.pos.length > 0
->>>>>>> 2a95b20c (:memo: add zoom and drag and drop)
